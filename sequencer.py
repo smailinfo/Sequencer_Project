@@ -1,11 +1,8 @@
-import os
+import os , glob , os.path
 import random
 from configparser import ConfigParser
-
 from datetime import datetime, timedelta
 import time
-
-
 import psycopg2
 import sys
 from termcolor import colored
@@ -18,13 +15,15 @@ import threading
 
 configure = ConfigParser()
 configure.read('tasks.ini')
+configure.read('sequencer.ini')
 
 class connexion:
     def __init__(self):
+        #database=configure.get('DATABASE', 'database')
         self.con = psycopg2.connect(database="alsat_2a", user="postgres", password="cgs", host="localhost", port="5432")
         self.cur = self.con.cursor()
 
-    print("Database opened with successufully")
+    print(colored("Database opened with successufully","green"))
 
     def close(self):
         self.close = self.con.close()
@@ -70,8 +69,16 @@ def insert_line_dict(values):
 
         coonn.commit()
         nbr+=1
-    print (f'{nbr} of line are saved')
+    print (colored(f'{nbr} task are saved ',"green"))
 
+def remove_files():
+    y=0
+    file_list=glob.glob(os.path.join('Files','*.txt'))
+    for f in file_list:
+        #print(f)
+        os.remove(f)
+        y+=1
+    print(colored(f'{y} file are deleted',"red"))
 
 
 def task(line_pass: tuple,task_name:str='',number_task:int=2):
@@ -99,8 +106,8 @@ def task(line_pass: tuple,task_name:str='',number_task:int=2):
         print(colored(f"name {AB} is incorrect" ),"red")
 
     #duration= datetime.strptime(duration, "%M:%S")
-
     #date_task=datetime.strftime(date_time_task, "%m/%d/%Y")     # convert time to  str
+    #time_task=datetime.strftime(date_time_task, "%H:%M")
     #time_task=datetime.strftime(date_time_task, "%H:%M")
     #subprocess.call(["/home/cgs/Documents/Scripts/Atq_Tool.sh", time_task, date_task, path_task])
     #time.sleep(0.1)
@@ -112,15 +119,25 @@ def task(line_pass: tuple,task_name:str='',number_task:int=2):
 
 
     with open (f'Files/act_{task_name}_{number_task}.txt','w') as f:
-        f.write(f"task_number= {number_task}\nstatus= {line_value_dict['status']}\nfile_name= act_{task_name}_{number_task}.txt")
+        f.write(f"""##################################################################################
+#  Suivi de passage bande S 
+#  Sequencer Version        = 0.1
+#  System configuration     = /home/cgs/PycharmProjects/Sequencer/tasks.ini
+#  Generation Time    = {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
+##################################################################################
+""")
+
+        f.write(f"\ntask_name= {task_name}\ntask_time= {time_task}\ntask_number= {number_task}\nsat_name= {line_value_dict['sat_name']}\nsat_id= {line_value_dict['sat_id']}\nstatus= {line_value_dict['status']}\nfile_name= act_{task_name}_{number_task}.txt")
 
 
-    print(number_task)
+    #print(number_task)
     tup = (number_task,task_name,time_task,line_value_dict['sat_name'], line_value_dict['sat_id'], line_value_dict['station_id'],line_value_dict['status'])
     #tup = (task_name, line_value_dict['sat_name'] ,time_task, line_value_dict['sat_id'],line_value_dict['station_id'],line_value_dict['status'])
     return tup
 
 
+
+remove_files()
 
 coonn = connexion()
 curr = coonn.cur
@@ -129,43 +146,33 @@ where planing_pass."AOS" > now() at time zone 'utc'
 order by  planing_pass."AOS" 
 ''')
 
-
 curr.execute(sql)
 rows = curr.fetchall()
-
-
 
 col_names = []
 for elt in curr.description:
     col_names.append(elt[0])
-
 print(col_names)
 
 
-
-# Create the dataframe, passing in the list of col_names extracted from the description
-
-
 for u in rows:
-    print(u)
+    #print(u)
+    pass
 
 sequence_task=[]
 number_task=1
 for line_pass in rows:
-
     sequence_task.append(task(line_pass,'open_MMCS',number_task))
     number_task += 1
     #sequence_task.append(task(line_pass, 'open_RM',number_task))
     #number_task += 1
     #sequence_task.append(task(line_pass, 'open_TM',number_task))
     #number_task += 1
-print(number_task-1)
+print(colored(f'{number_task-1} task are programmed',"green"))
 
 
 t1 = threading.Thread(target=insert_line_dict, args=(sequence_task,))
 t1.start()      # starting thread 1
-#insert_line_dict(sequence_task)
-
 
 
 

@@ -31,7 +31,7 @@ def check_host(hostname:str=''):
     return response
 
 
-def get_ftp(section1,section2):
+def get_ftp(section1,section2):                         # TODO : Time out   2 times
     #print(configure.sections())
     #print(configure.get('STATION', 'password'))
 
