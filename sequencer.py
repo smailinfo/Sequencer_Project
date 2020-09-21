@@ -15,7 +15,7 @@ import threading
 
 configure = ConfigParser()
 configure.read('tasks.ini')
-configure.read('sequencer.ini')
+#configure.read('sequencer.ini')
 
 class connexion:
     def __init__(self):
@@ -161,13 +161,16 @@ for u in rows:
 
 sequence_task=[]
 number_task=1
-for line_pass in rows:
-    sequence_task.append(task(line_pass,'open_MMCS',number_task))
-    number_task += 1
-    #sequence_task.append(task(line_pass, 'open_RM',number_task))
-    #number_task += 1
-    #sequence_task.append(task(line_pass, 'open_TM',number_task))
-    #number_task += 1
+
+tasks_name=configure.sections()
+for line_pass in rows:                          # for each pass we take n task in sequencer.ini file
+    for tsk in tasks_name:
+        sequence_task.append(task(line_pass,tsk,number_task))
+        number_task += 1
+        #sequence_task.append(task(line_pass, 'open_RM',number_task))
+        #number_task += 1
+        #sequence_task.append(task(line_pass, 'open_TM',number_task))
+        #number_task += 1
 print(colored(f'{number_task-1} task are programmed',"green"))
 
 
