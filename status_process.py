@@ -1,9 +1,11 @@
 import datetime
+import subprocess
 import time
 import psycopg2
 from prettytable import PrettyTable
 from termcolor import colored
 from datetime import datetime, timedelta ,timezone
+import os
 
 
 
@@ -22,10 +24,6 @@ class connexion:
 
 coonn = connexion()
 curr = coonn.cur
-sql=(f'''SELECT task_number , task_name , task_time  FROM groundstation.sequencer_auto
-''')
-curr.execute(sql)
-rows = curr.fetchall()
 
 
 
@@ -39,21 +37,32 @@ col_names = []
 dt = datetime(2010, 2, 25, 23, 23)
 dr=time.mktime(dt.timetuple())
 
+
+
 #print('type dt', type(dt))
 #print(dr)
 while True:
-    x = PrettyTable(['task_number','task_name','task_date','remaining_time'])
-    date_now = datetime.now()
-    for elt in rows:
+    sql = (f'''SELECT task_number , task_name , task_time  FROM groundstation.sequencer_auto 
+    where sequencer_auto."task_time" > now() at time zone 'utc'
+    ''')
+    curr.execute(sql)
+    rows = curr.fetchall()
 
+    x = PrettyTable(['task_number','task_name','task_date','remaining_time'])
+
+    for elt in rows:
+        date_now = datetime.now()
         elt_unix_time = time.mktime(elt[2].timetuple())
-        date_nowg = time.mktime(date_now.timetuple())
-        remaining_time = elt_unix_time - date_nowg
-        #print(remaining_time)
-        #print('type delta',type(time_delta))
-        #time.mktime(time_delta.timetuple())
-        #time_delta2=   elt[2] - time.ctime()
+        date_now = time.mktime(date_now.timetuple())
+        remaining_time = elt_unix_time - date_now
         tab=[elt[0],elt[1],elt[2],remaining_time]
+
+        if remaining_time==0:
+            os.system(f"python /home/cgs/PycharmProjects/Sequencer/test_task.py {elt[0]} {elt[1]} ")
+            print('OK')
+        else:
+            pass
+
 
 
         x.add_row(tab)
@@ -61,7 +70,7 @@ while True:
 
     print(x.get_string())
 
-    time.sleep(5)
+    time.sleep(0.5)
 
 
 '''

@@ -1,0 +1,1 @@
+the task is not finshed because[Errno 2] No such file or directory: '/home/cgs/PycharmProjects/Sequencer/Files/act_1_/home/cgs/PycharmProjects/Sequencer/test_task.py.txt'

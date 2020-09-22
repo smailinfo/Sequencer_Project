@@ -17,6 +17,8 @@ configure = ConfigParser()
 configure.read('tasks.ini')
 #configure.read('sequencer.ini')
 
+
+#
 class connexion:
     def __init__(self):
         #database=configure.get('DATABASE', 'database')
@@ -38,7 +40,7 @@ def delete_from_table(schema: str = '', table_name: str = ''):
     curr.execute(f'delete from {schema}."{table_name}" ')
     coonn.commit()
 
-
+#insert passes  in sequencer_auto table:
 def insert_line_dict(values):
 
     schema = 'groundstation'
@@ -70,6 +72,7 @@ def insert_line_dict(values):
         coonn.commit()
         nbr+=1
     print (colored(f'{nbr} task are saved ',"green"))
+
 
 def remove_files():
     y=0

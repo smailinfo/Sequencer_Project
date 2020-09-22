@@ -20,13 +20,13 @@ configure.read('sequencer.ini')
 
 def check_host(hostname:str=''):
 
-    response = os.system("ping -w3 " + hostname + "  > /dev/null & ")
+    response = os.system("ping -w3 " + hostname + "  > /dev/null  ")
     if response == 0:
         response='OK'
-        #print (hostname, 'is up! \n ')
+        print (hostname, 'is up!\n')
 
     else:
-        #print(hostname, 'is down! \n ')
+        print(hostname, 'is down!\n')
         response = 'NOK'
     return response
 
@@ -238,10 +238,8 @@ def pass_existing():
 
 
 
-if __name__ == '__main__':
-
-    #pass_existing()
-    station=input("Please , choose one Station :  ORAN or OUAR \n")
+def main():
+    station = input("Please , choose one Station :  ORAN or OUAR \n")
     if station=='ORAN':
         get_ftp('STATION_ORAN','PASS_FILE_ORAN')
         save_pass('PASS_FILE_ORAN')
@@ -250,7 +248,17 @@ if __name__ == '__main__':
         get_ftp('STATION_OUAR','PASS_FILE_OUAR')
         save_pass('PASS_FILE_OUAR')
     else :
-        print('your station is incorrect !!! \n  ')
+        print('your station name is incorrect !!! \n  ')
+        main()
+
+
+if __name__ == '__main__':
+    main()
+
+    #pass_existing()
+
+
+
 
 
 
