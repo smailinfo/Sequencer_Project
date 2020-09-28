@@ -1,27 +1,10 @@
-import queue
+import datetime
+from ftplib import FTP
 
-q1 = queue.Queue(10) # the max size is 10      FIFO
-#q1 = queue.LifoQueue(10) #    LIFO
-
-
-q1.put(1)
-q1.put(2)
-q1.put(3)
-q1.put(4)
-q1.put(5)
-q1.put(6)
-q1.put(7)
-q1.put(8)
-q1.put(9)
-q1.put(10)
-print(q1.get())
-q1.put(11)
-
-
-
-print(q1.get())
-print(q1.get())
-print(q1.get())
-print(q1.get())
-print(q1.get())
-print(q1.get())
+ftp = FTP(host="192.168.148.132", user="sccope",passwd="sccope")
+ftp.cwd("/EXCHANGE/Internal/FDS/SCC")
+file_name = sorted(ftp.nlst('PLANPASS_ALS2A*.asc'))
+print(len(file_name))
+for i in file_name:
+    pass
+print(i)

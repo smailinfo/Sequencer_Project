@@ -115,7 +115,7 @@ def definition_tables():
 
              }})
 
-    '''
+
 
     tables_info_list.append({
         'schema': 'groundstation',
@@ -130,6 +130,26 @@ def definition_tables():
                 'status': 'character varying  NULL'
 
             }})
+            
+    '''
+
+    tables_info_list.append({
+        'schema': 'groundstation',
+        'table_name': 'planning_pass',
+        'primary_key': '',
+        'table_parameters':
+            {
+                'sat_id': 'smallint NOT NULL',
+                'sat_name': 'character varying  NULL',
+                'AOS': 'timestamp  NULL',
+                'LOS': 'timestamp  NULL',
+                'Duration': 'float',
+                'station_id': 'smallint NOT NULL',
+
+
+
+            }})
+
 
     for table_info in tables_info_list:
         # print(table_info)
