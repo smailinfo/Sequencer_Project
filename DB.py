@@ -131,7 +131,7 @@ def definition_tables():
 
             }})
             
-    '''
+    
 
     tables_info_list.append({
         'schema': 'groundstation',
@@ -149,6 +149,31 @@ def definition_tables():
 
 
             }})
+'''
+
+
+    tables_info_list.append({
+        'schema': 'groundstation',
+        'table_name': 'planifier',
+        'primary_key': 'task_number',
+        'table_parameters':
+            {
+
+                'task_number': 'serial',
+                'task_name': 'character varying  NULL',
+                'task_time_start': 'timestamp  NULL',
+                'task_time_end': 'timestamp  NULL',
+                'sat_name': 'character varying  NULL',
+                'sat_id': 'smallint NOT NULL',
+                'station_id': 'smallint NOT NULL',
+                'status': 'character varying  NULL'
+
+
+
+            }})
+
+
+
 
 
     for table_info in tables_info_list:

@@ -1,10 +1,12 @@
-import datetime
-from ftplib import FTP
 
-ftp = FTP(host="192.168.148.132", user="sccope",passwd="sccope")
-ftp.cwd("/EXCHANGE/Internal/FDS/SCC")
-file_name = sorted(ftp.nlst('PLANPASS_ALS2A*.asc'))
-print(len(file_name))
-for i in file_name:
-    pass
-print(i)
+    with open (f'Files/act_{task_name}_{number_task}.txt','w') as f:
+        f.write(f"""##################################################################################
+#  Suivi de passage bande S 
+#  Sequencer Version        = 0.1
+#  System configuration     = /home/cgs/PycharmProjects/Sequencer/tasks.ini
+#  Generation Time    = {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
+##################################################################################
+""")
+
+        f.write(f"\ntask_name= {task_name}\ntask_time= {time_task}\ntask_number= {number_task}\nsat_name= {line_value_dict['sat_name']}\nsat_id= {line_value_dict['sat_id']}\nstatus= {line_value_dict['status']}\nfile_name= act_{task_name}_{number_task}.txt")
+

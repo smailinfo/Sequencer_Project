@@ -1,0 +1,14 @@
+##################################################################################
+    #  Suivi de passage bande S 
+    #  Sequencer Version        = 0.1
+    #  System configuration     = /home/cgs/PycharmProjects/Sequencer/tasks.ini
+    #  Generation Time    = 2020-09-29 15:14:46
+    ##################################################################################
+    
+task_name= open_TM
+task_time= 2020-10-04 10:17:59
+task_number= 155
+sat_name= ALSAT2A
+sat_id= 938
+status= waiting
+file_name= act_open_TM_155.txt

@@ -27,12 +27,10 @@ configure.read('sequencer.ini')
 
 
 def check_host(hostname:str=''):
-
     response = os.system("ping -w3 " + hostname + "  > /dev/null  ")
     if response == 0:
-        response='OK'
         print (hostname, 'is up!\n')
-
+        response = 'OK'
     else:
         print(hostname, 'is down!\n')
         response = 'NOK'
@@ -75,13 +73,11 @@ def get_ftp(section1,section2):                         # TODO : Time out   2 ti
     elif check_host(hostname)=='NOK' :
         print (colored(f"No connection with {hostname} \n ","red"))
 
-
 class connexion:
     try:
         def __init__(self):
             self.con=psycopg2.connect(database="alsat_2a", user="postgres" , password="cgs", host="localhost" , port="5432")
             self.cur=self.con.cursor()
-
         print(colored("Database opened with successufully\n ","green"))
 
         def close(self):
@@ -98,7 +94,6 @@ def extract_line(pass_planing_file):
         for j in enumerate(infile):
             pass
     k=j[0]
-    #print(k)
     pass_list=[]
     with open(pass_planing_file) as infile:
         for x in enumerate(infile):
@@ -106,8 +101,6 @@ def extract_line(pass_planing_file):
                 #if x[1].find() ....
                 #print(x[0], x[1])
                 pass_list.append(x[1] )
-    #for i in pass_list :
-      #  print(i)
     return pass_list
 
 
@@ -117,10 +110,10 @@ def extract_pass_2a(pass_planing_file):
     with open(pass_planing_file) as infile:
         if 'A2ORAN' in infile.read():
             sta = 101
-        if 'A2OUAR' in infile.read():
+        elif 'A2OUAR' in infile.read():
             sta = 100
         else:
-            sta = 000
+            sta = 0
             print('please check your file station id !!! ')
 
 
@@ -129,10 +122,6 @@ def extract_pass_2a(pass_planing_file):
         print(" ********* Start extracting ********* ")
         if re.findall("ALS2A", pass_planing_file):
             for i in pass_list:
-                #date_beg=i[1:11]
-                #time_beg=i[12:20]
-                #date_end = i[26:36]
-                #time_end = i[37:45]
                 duration=i[52:57]
                 date_begining = i[1:20]
                 date_ending = i[26:45]
@@ -140,22 +129,14 @@ def extract_pass_2a(pass_planing_file):
                 #date_beg = datetime.strftime(date_beg, "%d/%m/%Y")    # # convert time to  str
                 pass_2a= 938, "ALSAT2A" , date_begining , date_ending , duration , sta
                 pass_list_2a.append(pass_2a)
-
-                #print(date_beg , time_beg , date_end , time_end , duration )
                 bar()
                 time.sleep(0.01)
 
-        if re.findall("ALS2B", pass_planing_file):
+        elif re.findall("ALS2B", pass_planing_file):
             for i in pass_list:
-                # date_beg=i[1:11]
-                # time_beg=i[12:20]
-                # date_end = i[26:36]
-                # time_end = i[37:45]
                 duration = i[52:57]
                 date_begining = i[1:20]
                 date_ending = i[26:45]
-                # date_beg = datetime.strptime(date_beg, "%Y/%m/%d")    # convert str to date
-                # date_beg = datetime.strftime(date_beg, "%d/%m/%Y")    # # convert time to  str
                 pass_2a = 939, "ALSAT2B", date_begining, date_ending, duration, sta
                 pass_list_2a.append(pass_2a)
 
@@ -184,21 +165,12 @@ def file_browser(file_name,located_path):
         print(colored(f'file {file_name} is not exist .... ',"red") )
 
 
-
-
-
-
-
 def save_pass(section:str=''):
 
     file_name_2a = configure.get(section,'file_name1')
     file_name_2b = configure.get(section, 'file_name2')
     located_path = configure.get(section , 'located_path')
-    #print(file_name_2a,file_name_2b)
-    #print(located_path)
     file_name = [file_browser(file_name_2a,located_path),file_browser(file_name_2b,located_path)]
-    #file_browser(file_name_2a, located_path)
-
     schema='groundstation'
     table_name='planning_pass'
     col_value_dict = {
@@ -217,13 +189,13 @@ def save_pass(section:str=''):
     #values = list(col_value_dict.values())  # liste append
 
     for f in file_name:
-        print(f)
+        #print(f)
         values = extract_pass_2a(f)
         try:
             with alive_bar(len(values)) as bar:
                 c = 0
                 for p in values:
-                    print(p)
+                    #print(p)
                     # print(list(p ))
                     sql = (f'INSERT INTO {schema}."{table_name}" ("' + '", "'.join(
                         ['%s'] * len(columns)) + '"' + ") ") % tuple(
@@ -241,12 +213,6 @@ def save_pass(section:str=''):
     print("*********  New planing pass list ********* \n  ")
     pass_existing()
 
-    #for file in file_name:
-       # values = extract_pass_2a(located_path+"/"+file_name)
-    #for i in values:
-        #print (i)
-
-   
 
 
 def pass_existing():
@@ -277,10 +243,8 @@ def main():
     #station = input("Please , choose one Station :  ORAN or OUAR \n")
     station = 'ORAN'
     if station=='ORAN':
-        get_ftp('sccsrvnom2','PASS_FILE_O')
-        #file_browser('PLANPASS*','/home/cgs/PycharmProjects/Sequencer/Files')
-        save_pass('PASS_FILE_O')
-        #extract_pass_2a('/home/cgs/PycharmProjects/Sequencer/Files/PLANPASS_ALS2B_20200926132210_MANUEL.asc')
+        #get_ftp('sccsrvnom2','PASS_FILE_ORAN')
+        save_pass('PASS_FILE_ORAN')
 
     elif station=='OUAR':
         get_ftp('STATION_OUAR','PASS_FILE_OUAR')

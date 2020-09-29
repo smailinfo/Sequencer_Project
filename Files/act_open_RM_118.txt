@@ -1,0 +1,14 @@
+##################################################################################
+    #  Suivi de passage bande S 
+    #  Sequencer Version        = 0.1
+    #  System configuration     = /home/cgs/PycharmProjects/Sequencer/tasks.ini
+    #  Generation Time    = 2020-09-29 15:14:46
+    ##################################################################################
+    
+task_name= open_RM
+task_time= 2020-10-03 08:46:35
+task_number= 118
+sat_name= ALSAT2B
+sat_id= 939
+status= waiting
+file_name= act_open_RM_118.txt
