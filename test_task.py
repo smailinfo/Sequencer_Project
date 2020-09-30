@@ -16,13 +16,13 @@ def check_host(hostname:str=''):
             response='terminated OK'
             print (hostname, 'is up! \n ')
             with open(f'/home/cgs/PycharmProjects/Sequencer/Files/act_{task_name}_{task_number}.txt', 'a') as f:
-                f.write(f"task_name {response}")
+                f.write(f"{task_name} {response}")
 
         else:
             print(hostname, 'is down! \n ')
             response = 'terminated NOK'
             with open(f'/home/cgs/PycharmProjects/Sequencer/Files/act_{task_name}_{task_number}.txt', 'a') as f:
-                f.write(f"\ntask_name {response}")
+                f.write(f"\n{task_name} {response}")
 
     except Exception as e :
         print((f' the task is not finshed because{e}'))
