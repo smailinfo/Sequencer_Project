@@ -54,16 +54,16 @@ def get_ftp(section1,section2):                         # TODO : Time out   2 ti
             ftp = FTP(hostname)
             ftp.login(usr, pwd)
             ftp.cwd(path)
-            print(ftp.pwd())
+            #print(ftp.pwd())
 
             for file in files_list:
                 files = sorted(ftp.nlst(file+'*.asc'))
                 for f in files:
                     pass
-                print(f)
+                #print(f)
                 my_file = open(located_path + "/" + f, 'wb')  # Open a local file to store the downloaded file
                 ftp.retrbinary('RETR ' + f, my_file.write, 1024)  # Enter the filename to download
-                print(colored(f" '{f}' : file transfert  completed with success \n ", "green"))
+                print(colored(f"'{f}' : file transfert  completed with success ", "green"))
                 # my_file.close()
 
         except Exception as e:
@@ -119,7 +119,7 @@ def extract_pass_2a(pass_planing_file):
 
     pass_list=extract_line(pass_planing_file)
     with alive_bar(len(pass_list)) as bar:
-        print(" ********* Start extracting ********* ")
+        print("\n\n********* Start extracting ********* ")
         if re.findall("ALS2A", pass_planing_file):
             for i in pass_list:
                 duration=i[52:57]
@@ -145,7 +145,7 @@ def extract_pass_2a(pass_planing_file):
                 time.sleep(0.01)
 
 
-    print(colored(f"\nfile:{pass_planing_file} "),colored("is extracted \n" , "green"))
+    print(colored(f"file:{pass_planing_file} "),colored("is extracted" , "green"))
     return pass_list_2a
 
 
@@ -205,12 +205,12 @@ def save_pass(section:str=''):
                     c += 1
                     bar()
                     time.sleep(0.01)
-                print(colored(f"{c}:", "green"), ("pass are saved \n "))
+                print(colored(f"{c}:", "green"), ("pass are saved "))
 
         except Exception as e:
-            print(colored(f'any pass is not  saved  because {e} \n ', "red"))
+            print(colored(f'any pass is not  saved  because {e}', "red"))
 
-    print("*********  New planing pass list ********* \n  ")
+    print("\n\n                    *********  New planing pass list ********* \n  ")
     pass_existing()
 
 
@@ -243,7 +243,7 @@ def main():
     #station = input("Please , choose one Station :  ORAN or OUAR \n")
     station = 'ORAN'
     if station=='ORAN':
-        #get_ftp('sccsrvnom2','PASS_FILE_ORAN')
+        get_ftp('sccsrvnom2','PASS_FILE_ORAN')
         save_pass('PASS_FILE_ORAN')
 
     elif station=='OUAR':

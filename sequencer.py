@@ -5,6 +5,8 @@ from datetime import datetime, timedelta
 import time
 import psycopg2
 import sys
+
+from alive_progress import alive_bar
 from termcolor import colored
 from prettytable import PrettyTable
 import re
@@ -40,8 +42,10 @@ def delete_from_table(schema: str = '', table_name: str = ''):
     curr.execute(f'delete from {schema}."{table_name}" ')
     coonn.commit()
 
-#insert passes  in sequencer_auto table:
+
+#insertpasses  in sequencer_auto table:
 def insert_line_dict(values):
+
 
     schema = 'groundstation'
     table_name = 'planifier'
@@ -63,15 +67,19 @@ def insert_line_dict(values):
     # values = list(col_value_dict.values())  # liste append
 
     nbr=0
-    for p in values:
-        #print(p)
-        sql = (f'INSERT INTO {schema}."{table_name}" ("' + '", "'.join(['%s'] * len(columns)) + '"' + ") ") % tuple(
-            columns) + "VALUES (" + ", ".join(["%s"] * len(columns)) + ")"
-        #print(sql)
-        curr.execute(sql, list(p))
+    with alive_bar(len(values)) as bar:
+        for p in values:
+            sql = (f'INSERT INTO {schema}."{table_name}" ("' + '", "'.join(['%s'] * len(columns)) + '"' + ") ") % tuple(
+                columns) + "VALUES (" + ", ".join(["%s"] * len(columns)) + ")"
+            print(p)
+            curr.execute(sql, list(p))
+            coonn.commit()
+            nbr+=1
+            bar()
 
-        coonn.commit()
-        nbr+=1
+
+
+
     print (colored(f'{nbr} task are saved ',"green"))
 
 
@@ -145,7 +153,7 @@ def task(line_pass: tuple,task_name:str='',number_task:int=2):
     #print(number_task)
     tup = (number_task,task_name,task_time_start,task_time_end,line_value_dict['sat_name'], line_value_dict['sat_id'], line_value_dict['station_id'],line_value_dict['status'])
     #tup = (task_name, line_value_dict['sat_name'] ,time_task, line_value_dict['sat_id'],line_value_dict['station_id'],line_value_dict['status'])
-    print(tup)
+    #print(tup)
     return tup
 
 
@@ -180,14 +188,15 @@ number_task=1
 
 tasks_name=configure.sections()
 for line_pass in rows:  # for each pass we take n task in sequencer.ini file
-    print (line_pass)
+    #print (line_pass)
     for tsk in tasks_name:
         sequence_task.append(task(line_pass,tsk,number_task))
         number_task += 1
 
 
 for i in sequence_task :
-   print(i)
+   #(i)
+   pass
 print(colored(f'{number_task-1} task are programmed',"green"))
 
 
