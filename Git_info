@@ -1,0 +1,22 @@
+
+email:smailinfo31@gmail.com
+user: smailinfo
+password:tarjih123
+
+
+…or create a new repository on the command line
+
+echo "# Sequencer_Project" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M master
+git remote add origin https://github.com/smailinfo/Sequencer_Project.git
+git push -u origin master
+
+
+…or push an existing repository from the command line
+
+git remote add origin https://github.com/smailinfo/Sequencer_Project.git
+
+git push -u origin master

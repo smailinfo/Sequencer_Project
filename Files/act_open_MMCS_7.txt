@@ -1,3 +1,0 @@
-task_number= 7
-status= waiting
-file_name= act_open_MMCS_7.txt

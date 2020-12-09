@@ -1,3 +1,0 @@
-task_number= 32
-status= waiting
-file_name= act_open_MMCS_32.txt
